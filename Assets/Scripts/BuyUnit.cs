@@ -16,7 +16,7 @@ public class BuyUnit : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Trigger entered.");
-        if (player.Money >= minerCost)
+        while (player.Money >= minerCost)
         {
             if (other.CompareTag("Player"))
             {

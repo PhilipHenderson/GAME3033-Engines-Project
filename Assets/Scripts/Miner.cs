@@ -1,6 +1,13 @@
 using UnityEngine;
 using TMPro;
 
+public enum WorkerType
+{
+    M, //(Minor)
+    WC,//(WoodCutter)
+    F  //(Farmer)
+}
+
 public class Miner : MonoBehaviour
 {
     [Header("Miner Properties")]
@@ -22,6 +29,15 @@ public class Miner : MonoBehaviour
     public Transform sellGoodsLocation;
     private bool sellingGoods;
 
+    [Header("Health Properties")]
+    public int maxHealth = 100;
+    public int currentHealth;
+    public TextMeshProUGUI healthText;
+
+    [Header("Worker Type Properties")]
+    public WorkerType workerType;
+    public TextMeshProUGUI workerTypeText;
+
     public LayerMask blockLayer;
     public Player player;
 
@@ -31,7 +47,10 @@ public class Miner : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<Player>();
-        inventoryText.SetText(inventorySize.ToString());
+        inventoryText.SetText($"{inventorySize}\n{maxInventorySize}");
+        currentHealth = maxHealth;
+        UpdateHealthUI();
+        SetWorkerType(WorkerType.M);
     }
 
     private void Update()
@@ -53,7 +72,6 @@ public class Miner : MonoBehaviour
                     // Sell the goods and return to mining
                     Debug.Log("selling goods, Please Wait");
                     player.AddMoney(inventorySize);
-                    Debug.Log(player.money);
                     inventorySize = 0;
                     inventoryText.text = inventorySize.ToString();
                     Debug.Log("Going to Mine");
@@ -99,6 +117,33 @@ public class Miner : MonoBehaviour
         }
     }
 
+    private void UpdateHealthUI()
+    {
+        healthText.SetText($"{currentHealth}\n{maxHealth}");
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        UpdateHealthUI();
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void UpdateWorkerTypeUI()
+    {
+        workerTypeText.SetText($"{workerType}");
+    }
+
+    public void SetWorkerType(WorkerType newWorkerType)
+    {
+        workerType = newWorkerType;
+        UpdateWorkerTypeUI();
+    }
+
     private Block FindClosestBlock()
     {
         Block[] blocks = FindObjectsOfType<Block>();
@@ -127,7 +172,7 @@ public class Miner : MonoBehaviour
     {
         mining = false;
         inventorySize++;
-        inventoryText.SetText(inventorySize.ToString());
+        inventoryText.SetText($"{inventorySize}\n{maxInventorySize}");
         currentBlock.Mine();
         currentBlock = null;
 

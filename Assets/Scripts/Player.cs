@@ -35,7 +35,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(money);
         // get the horizontal and vertical input axes
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
@@ -45,7 +44,7 @@ public class Player : MonoBehaviour
         rb.velocity = movement * speed;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AddMoney(10);
+
         }
     }
 
@@ -75,8 +74,6 @@ public class Player : MonoBehaviour
 
     public void AddMoney(float amount)
     {
-        Debug.Log("Adding " + amount + " to money");
         money += amount;
-        Debug.Log("New money value: " + money);
     }
 }
