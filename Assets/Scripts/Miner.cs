@@ -15,7 +15,7 @@ public class Miner : MonoBehaviour
     [Header("Inventory Properties")]
     public InventoryTextController inventoryTextController;
     public TextMeshProUGUI inventoryText;
-    public int inventorySize = 0;
+    public float inventorySize = 0;
     public int maxInventorySize = 3;
 
     [Header("Selling Properties")]
@@ -30,6 +30,7 @@ public class Miner : MonoBehaviour
 
     private void Start()
     {
+        player = FindObjectOfType<Player>();
         inventoryText.SetText(inventorySize.ToString());
     }
 
@@ -52,6 +53,7 @@ public class Miner : MonoBehaviour
                     // Sell the goods and return to mining
                     Debug.Log("selling goods, Please Wait");
                     player.AddMoney(inventorySize);
+                    Debug.Log(player.money);
                     inventorySize = 0;
                     inventoryText.text = inventorySize.ToString();
                     Debug.Log("Going to Mine");

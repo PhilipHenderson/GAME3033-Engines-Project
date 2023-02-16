@@ -18,9 +18,9 @@ public class BuyUnit : MonoBehaviour
         Debug.Log("Trigger entered.");
         if (player.Money >= minerCost)
         {
-            player.money -= minerCost;
             if (other.CompareTag("Player"))
             {
+                player.money -= minerCost;
                 Instantiate(minerPrefab, transform.position, transform.rotation);
             }
         }

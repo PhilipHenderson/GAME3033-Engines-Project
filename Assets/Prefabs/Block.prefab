@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toBeMinedMaterial: {fileID: 2100000, guid: ca3baf7a9bc17764b923ed6cc0966935, type: 2}
   minedMaterial: {fileID: 2100000, guid: 9b7864a4f39198f4980cb29295cea6ee, type: 2}
-  player: {fileID: 4318204335887000810, guid: fb9ae9be113f9c5418581c712f08b6cd, type: 3}
+  player: {fileID: 44614158, guid: fb9ae9be113f9c5418581c712f08b6cd, type: 3}
   miner: {fileID: 5552612750093494855, guid: 2c333aae01279824383092dd45923fbf, type: 3}
   mineTime: 2
   beingMined: 0
