@@ -38,6 +38,7 @@ public class Miner : MonoBehaviour
     public WorkerType workerType;
     public TextMeshProUGUI workerTypeText;
 
+    public int maxAngleOffset;
     public LayerMask blockLayer;
     public Player player;
 
@@ -63,18 +64,15 @@ public class Miner : MonoBehaviour
                 Vector2 direction = sellGoodsLocation.position - transform.position;
                 if (direction.magnitude > 0.1f)
                 {
-                    Debug.Log("Going to sell goods");
                     direction.Normalize();
                     transform.position += (Vector3)direction * speed * Time.deltaTime;
                 }
                 else
                 {
                     // Sell the goods and return to mining
-                    Debug.Log("selling goods, Please Wait");
                     player.AddMoney(inventorySize);
                     inventorySize = 0;
                     inventoryText.text = inventorySize.ToString();
-                    Debug.Log("Going to Mine");
                     sellingGoods = false;
                 }
             }
@@ -83,14 +81,12 @@ public class Miner : MonoBehaviour
                 if (currentBlock != null && (currentBlock.IsMined() || currentBlock.beingMined))
                 {
                     // Current block has been fully mined or is already being mined, find next closest block
-                    Debug.Log("Finding closest block");
                     currentBlock.GetComponent<Renderer>().material = null;
                     currentBlock = FindClosestBlock();
                 }
                 else if (currentBlock == null)
                 {
                     // No current block, find closest block
-                    Debug.Log("Finding closest block");
                     currentBlock = FindClosestBlock();
                 }
                 else
@@ -99,18 +95,21 @@ public class Miner : MonoBehaviour
                     if (direction.magnitude > miningRange)
                     {
                         // Move towards the current block
-                        Debug.Log("Moving toward current block");
                         direction.Normalize();
-                        transform.position += (Vector3)direction * speed * Time.deltaTime;
+
+                        // Add a random angle offset to the direction
+                        float angle = Random.Range(-maxAngleOffset, maxAngleOffset);
+                        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                        Vector3 offsetDirection = rotation * direction;
+
+                        transform.position += offsetDirection * speed * Time.deltaTime;
                     }
                     else
                     {
                         // Start mining the current block
-                        Debug.Log("Mining current block");
                         mining = true;
                         currentBlock.GetComponent<Renderer>().material = gettingMinedMaterial;
                         currentBlock.Mine();
-                        Invoke("MineBlock", miningTime);
                     }
                 }
             }
@@ -135,7 +134,7 @@ public class Miner : MonoBehaviour
 
     private void UpdateWorkerTypeUI()
     {
-        workerTypeText.SetText($"{workerType}");
+        workerTypeText.SetText(workerType.ToString());
     }
 
     public void SetWorkerType(WorkerType newWorkerType)
@@ -151,8 +150,12 @@ public class Miner : MonoBehaviour
         float closestDistance = Mathf.Infinity;
         foreach (Block block in blocks)
         {
-            if (!block.IsMined())
+            //Debug.Log("Checking block: " + block.name);
+            //Debug.Log("IsMined(): " + block.IsMined());
+            //Debug.Log("miner: " + block.miner);
+            if (!block.IsMined() && (block.miner == null || block.miner == this))
             {
+                //Debug.Log("Found unmined block: " + block.name);
                 float distance = Vector2.Distance(transform.position, block.transform.position);
                 if (distance < closestDistance)
                 {
@@ -160,10 +163,19 @@ public class Miner : MonoBehaviour
                     closestDistance = distance;
                 }
             }
+            else
+            {
+                Debug.Log("Block " + block.name + " is already mined or being mined.");
+            }
         }
         if (closestBlock != null)
         {
+            closestBlock.miner = this;
             closestBlock.GetComponent<Renderer>().material = highlightedMaterial;
+        }
+        else
+        {
+            Debug.Log("No unmined block found.");
         }
         return closestBlock;
     }
@@ -174,6 +186,7 @@ public class Miner : MonoBehaviour
         inventorySize++;
         inventoryText.SetText($"{inventorySize}\n{maxInventorySize}");
         currentBlock.Mine();
+        currentBlock.miner = null;
         currentBlock = null;
 
         if (inventorySize >= maxInventorySize)

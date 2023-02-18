@@ -186,6 +186,7 @@ MonoBehaviour:
   healthText: {fileID: 1552962182535643406}
   workerType: 0
   workerTypeText: {fileID: 1552962183929995194}
+  maxAngleOffset: 20
   blockLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -587,7 +588,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 6}
+  m_SizeDelta: {x: 0.33, y: 0.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1552962183062458737
 Canvas:

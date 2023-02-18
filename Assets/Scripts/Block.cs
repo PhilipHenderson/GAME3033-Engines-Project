@@ -11,6 +11,7 @@ public class Block : MonoBehaviour
 
     public float mineTime = 2.0f;
 
+
     private bool mined = false;
     public bool beingMined = false;
 
@@ -18,6 +19,7 @@ public class Block : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<Player>();
+        miner = FindObjectOfType<Miner>();
     }
 
     public bool IsMined()
@@ -54,7 +56,7 @@ public class Block : MonoBehaviour
 
     private IEnumerator MineCoroutine()
     {
-        yield return new WaitForSeconds(mineTime); // Wait for the mining time
+        yield return new WaitForSeconds(miner.miningTime); // Wait for the mining time
         mined = true;
         beingMined = false;
         Destroy(gameObject);
