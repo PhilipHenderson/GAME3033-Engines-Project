@@ -42,13 +42,15 @@ public class Block : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Miner"))
         {
+            Miner miner = collision.gameObject.GetComponent<Miner>();
+
             // Get the distance between the miner and the block
             float distance = Vector2.Distance(transform.position, collision.transform.position);
-    
+
             // Check if the miner is within mining distance
             if (distance <= miner.miningRange)
             {
-                // Start the mining coroutine
+                // Start the mining coroutine on this block
                 Mine();
             }
         }

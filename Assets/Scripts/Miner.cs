@@ -110,8 +110,18 @@ public class Miner : MonoBehaviour
                         mining = true;
                         currentBlock.GetComponent<Renderer>().material = gettingMinedMaterial;
                         currentBlock.Mine();
+
                     }
                 }
+            }
+        }
+        else
+        {
+            miningTime -= Time.deltaTime;
+            if (miningTime <= 0)
+            {
+                MineBlock();
+                miningTime = 2.0f;
             }
         }
     }
@@ -150,22 +160,14 @@ public class Miner : MonoBehaviour
         float closestDistance = Mathf.Infinity;
         foreach (Block block in blocks)
         {
-            //Debug.Log("Checking block: " + block.name);
-            //Debug.Log("IsMined(): " + block.IsMined());
-            //Debug.Log("miner: " + block.miner);
             if (!block.IsMined() && (block.miner == null || block.miner == this))
             {
-                //Debug.Log("Found unmined block: " + block.name);
                 float distance = Vector2.Distance(transform.position, block.transform.position);
                 if (distance < closestDistance)
                 {
                     closestBlock = block;
                     closestDistance = distance;
                 }
-            }
-            else
-            {
-                Debug.Log("Block " + block.name + " is already mined or being mined.");
             }
         }
         if (closestBlock != null)
