@@ -12,9 +12,8 @@ public class Portal : MonoBehaviour
         {
             Player player = other.GetComponent<Player>();
 
-            // Save the player's money and health
-            PlayerPrefs.SetFloat("Money", player.Money);
-            PlayerPrefs.SetInt("CurrentHP", player.CurrentHP);
+            // Save the player's data in GameManager
+            GameManager.Instance.SetPlayerData(player);
 
             // Load the new scene
             SceneManager.LoadScene(sceneName);
@@ -24,30 +23,16 @@ public class Portal : MonoBehaviour
     // In the new scene, spawn the player at the portal endpoint
     private void Start()
     {
-        if (PlayerPrefs.HasKey("Money") && PlayerPrefs.HasKey("CurrentHP"))
+        if (GameManager.Instance.currentPD != null)
         {
-            float money = PlayerPrefs.GetFloat("Money");
-            int currentHP = PlayerPrefs.GetInt("CurrentHP");
+            MyPlayersData playerData = GameManager.Instance.currentPD;
 
-            Player player = Player.Instance;
-            player.AddMoney(money);
-            player.currentHP = currentHP;
+            GameObject newPlayer = Instantiate(playerData.prefab, playerData.playerPosition, playerData.rotation);
+            Player player = newPlayer.GetComponent<Player>();
+            player.currentHP = playerData.currentHP;
+            player.money = playerData.playerMoney;
 
-            GameObject spawnPoint = GameObject.Find("PortalEndpoint");
-            if (spawnPoint != null)
-            {
-                player.transform.position = spawnPoint.transform.position;
-            }
-            else
-            {
-                player.transform.position = spawnPosition;
-            }
-
-            PlayerPrefs.DeleteKey("Money");
-            PlayerPrefs.DeleteKey("CurrentHP");
+            GameManager.Instance.currentPD = null;
         }
-        // Print debug information
-        Debug.Log("Portal script attached to: " + gameObject.name);
-        Debug.Log("Scene name: " + sceneName);
     }
 }

@@ -1,33 +1,15 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    private static Player instance;
-
-    public static Player Instance
-    {
-        get
-        {
-            if (!instance)
-            {
-                instance = FindObjectOfType<Player>();
-                if (!instance)
-                {
-                    GameObject obj = new GameObject();
-                    instance = obj.AddComponent<Player>();
-                    obj.name = instance.GetType().ToString();
-                    DontDestroyOnLoad(obj);
-                }
-            }
-            return instance;
-        }
-    }
-
-    public float speed;
     public int maxHP = 100;
     public int currentHP;
     public float startingMoney = 0.0f;
+    public float speed;
     public float money = 0.0f;
+
+    public static MyPlayersData currentPlayerData;
 
     private Rigidbody2D rb;
 
@@ -41,7 +23,7 @@ public class Player : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody2D>();
         }
 
-        // Make the player game object persist between scenes
+        // Make the player object persistent between scene loads
         DontDestroyOnLoad(gameObject);
     }
 
@@ -87,5 +69,36 @@ public class Player : MonoBehaviour
     public void AddMoney(float amount)
     {
         money += amount;
+    }
+
+    public void SetPlayerData(MyPlayersData data, string currentSceneName)
+    {
+        Vector3 position = data.playerPosition;
+        Quaternion rotation = data.rotation;
+        GameObject prefab = data.prefab;
+        float money = data.playerMoney;
+        int hp = data.currentHP;
+
+        // Create a new player object with the saved data
+        GameObject playerObj = Instantiate(prefab, position, rotation);
+        Player player = playerObj.GetComponent<Player>();
+        player.currentHP = hp;
+        player.money = money;
+
+        // Set the current player data to the newly created player
+        currentPlayerData = new MyPlayersData(money, hp, position, rotation, prefab, currentSceneName);
+    }
+
+    public MyPlayersData GetData()
+    {
+        return new MyPlayersData(money, currentHP, transform.position, transform.rotation, gameObject, SceneManager.GetActiveScene().name);
+    }
+
+    public void SetData(MyPlayersData data)
+    {
+        transform.position = data.playerPosition;
+        transform.rotation = data.rotation;
+        money = data.playerMoney;
+        currentHP = data.currentHP;
     }
 }
