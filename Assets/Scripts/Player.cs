@@ -10,13 +10,14 @@ public class Player : MonoBehaviour
         {
             if (!instance)
             {
-                instance = GameObject.FindObjectOfType<Player>();
+                instance = FindObjectOfType<Player>();
                 if (!instance)
                 {
-                    instance = new GameObject().AddComponent<Player>();
-                    instance.name = instance.GetType().ToString();
+                    GameObject obj = new GameObject();
+                    instance = obj.AddComponent<Player>();
+                    obj.name = instance.GetType().ToString();
+                    DontDestroyOnLoad(obj);
                 }
-                DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
         }
@@ -35,6 +36,13 @@ public class Player : MonoBehaviour
         currentHP = maxHP;
         money = startingMoney;
         rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+        }
+
+        // Make the player game object persist between scenes
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()

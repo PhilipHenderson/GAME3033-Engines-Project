@@ -34,4 +34,12 @@ public class GridGenerator : MonoBehaviour
             }
         }
     }
+    public void DestroyTownBuildings()
+    {
+        GameObject buildingParent = GameObject.Find("Buildings");
+        if (buildingParent != null)
+        {
+            Destroy(buildingParent);
+        }
+    }
 }

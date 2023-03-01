@@ -4,25 +4,50 @@ using UnityEngine.SceneManagement;
 public class Portal : MonoBehaviour
 {
     public string sceneName;
-    public Vector3 spawnLocation;
-    public bool triggered;
+    public Vector3 spawnPosition;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Triggered");
-            triggered = true;
+            Player player = other.GetComponent<Player>();
+
+            // Save the player's money and health
+            PlayerPrefs.SetFloat("Money", player.Money);
+            PlayerPrefs.SetInt("CurrentHP", player.CurrentHP);
+
+            // Load the new scene
             SceneManager.LoadScene(sceneName);
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.transform.position = spawnLocation;
         }
     }
-    private void OnTriggerexit2D(Collider2D other)
+
+    // In the new scene, spawn the player at the portal endpoint
+    private void Start()
     {
-        if (other.CompareTag("Player"))
+        if (PlayerPrefs.HasKey("Money") && PlayerPrefs.HasKey("CurrentHP"))
         {
-            triggered = false;
+            float money = PlayerPrefs.GetFloat("Money");
+            int currentHP = PlayerPrefs.GetInt("CurrentHP");
+
+            Player player = Player.Instance;
+            player.AddMoney(money);
+            player.currentHP = currentHP;
+
+            GameObject spawnPoint = GameObject.Find("PortalEndpoint");
+            if (spawnPoint != null)
+            {
+                player.transform.position = spawnPoint.transform.position;
+            }
+            else
+            {
+                player.transform.position = spawnPosition;
+            }
+
+            PlayerPrefs.DeleteKey("Money");
+            PlayerPrefs.DeleteKey("CurrentHP");
         }
+        // Print debug information
+        Debug.Log("Portal script attached to: " + gameObject.name);
+        Debug.Log("Scene name: " + sceneName);
     }
 }

@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5010095671108865188}
   - component: {fileID: 5010095671108865186}
-  - component: {fileID: 5010095671108865187}
+  - component: {fileID: 191104752}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Untagged
@@ -144,7 +144,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.3165205, y: 0.31395113}
   m_EdgeRadius: 0
---- !u!114 &5010095671108865187
+--- !u!114 &191104752
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -156,6 +156,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11515ee4d82d62a4a9f281b8aca2c602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Town
-  spawnLocation: {x: 0, y: 0, z: 0}
-  triggered: 0
+  sceneName: Mine
+  spawnPosition: {x: 0, y: 0, z: 0}
