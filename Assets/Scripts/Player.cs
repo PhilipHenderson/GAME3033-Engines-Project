@@ -10,8 +10,12 @@ public class Player : MonoBehaviour
         {
             if (!instance)
             {
-                instance = new GameObject().AddComponent<Player>();
-                instance.name = instance.GetType().ToString();
+                instance = GameObject.FindObjectOfType<Player>();
+                if (!instance)
+                {
+                    instance = new GameObject().AddComponent<Player>();
+                    instance.name = instance.GetType().ToString();
+                }
                 DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
@@ -44,7 +48,7 @@ public class Player : MonoBehaviour
         rb.velocity = movement * speed;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
+            // TODO: create player action
         }
     }
 
